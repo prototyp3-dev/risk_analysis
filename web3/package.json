@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "set-request-source": "ts-node utils/set-request-source.ts"
   },
   "keywords": [],
   "author": "",
