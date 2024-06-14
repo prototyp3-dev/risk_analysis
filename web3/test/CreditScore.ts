@@ -46,16 +46,13 @@ async function createChainlinkSubscription(consumerAddress: string) {
     ['uint256'],
     [subscriptionId],
   );
-  await Promise.all([
-    chainlinkToken
-      .connect(linkTokenHolder)
-      .transferAndCall(
-        chainlinkRouterAddress,
-        parseEther('1000'),
-        encodedSubscriptionId,
-      ),
-    chainlinkRouter.createSubscriptionWithConsumer(consumerAddress),
-  ]);
+  await chainlinkToken
+    .connect(linkTokenHolder)
+    .transferAndCall(
+      chainlinkRouterAddress,
+      parseEther('1000'),
+      encodedSubscriptionId,
+    );
 
   return subscriptionId;
 }
