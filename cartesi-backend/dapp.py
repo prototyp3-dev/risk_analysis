@@ -23,9 +23,8 @@ def str2hex(str):
 
 def build_model_input(decoded):
     tax_id = decoded[0]
-    loam_amount = decoded[1]
-
-    obj = json.loads(decoded[2])
+    loan_amount = decoded[1]
+    obj = decoded[2]
 
     tax_id_type = obj["tax_id_type"]    
     tax_id_active = obj["tax_id_active"]
@@ -49,7 +48,7 @@ def build_model_input(decoded):
             scr_score = data_source["score"]
             scr_total_debt = data_source["total_debt"]
     
-    model_input = [start_date, social_capital, loam_amount, serasa_score, serasa_total_debt, scr_score, scr_total_debt]
+    model_input = [social_capital, loan_amount, serasa_score, serasa_total_debt, scr_score, scr_total_debt]
 
     return np.array(model_input).reshape(1, -1)
 
@@ -57,8 +56,8 @@ def build_model_input(decoded):
 @dapp.advance()
 def handle_advance(rollup: Rollup, data: RollupData) -> bool:
     try:
-        payload = data.str_payload()
-        decoded = decode_payload(payload)
+        decoded = decode_payload(data.payload)
+        LOGGER.debug(decoded)
 
         model_input = build_model_input(decoded)
 
@@ -79,8 +78,8 @@ def handle_advance(rollup: Rollup, data: RollupData) -> bool:
 @dapp.inspect()
 def handle_inspect(rollup: Rollup, data: RollupData) -> bool:
     try:
-        # tax_id,tax_id_type,tax_id_active,start_date,social_capital,loam_amount,serasa_score,serasa_total_debt,scr_score,scr_total_debt
-        test_input = [43958492000180,1,True,1341430861,77956254,364775,330,26017,942,848023]
+        # social_capital,loan_amount,serasa_score,serasa_total_debt,scr_score,scr_total_debt
+        test_input = [77956254,364775,330,26017,942,848023]
         test_input = np.array(test_input).reshape(1, -1)
 
         payload = str(model.predict(test_input))
