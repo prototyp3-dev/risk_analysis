@@ -14,19 +14,19 @@ def gen_data():
 
     start_date = random_date()
     social_capital = random.randint(10000, 100000000)
-    loam_amount = random.randint(1000, 1000000)
+    loan_amount = random.randint(1000, 1000000)
     serasa_score = random.randint(100, 1000)
     serasa_total_debt = random.randint(10000, 1000000)
     scr_score = random.randint(100, 1000)
     scr_total_debt = random.randint(10000, 1000000)
     score = int((serasa_score*0.7 + scr_score*0.3) / 2)
 
-    return f"{tax_id},{tax_id_type},{tax_id_active},{start_date},{social_capital},{loam_amount},{serasa_score},{serasa_total_debt},{scr_score},{scr_total_debt},{score}"
+    return f"{tax_id},{tax_id_type},{tax_id_active},{start_date},{social_capital},{loan_amount},{serasa_score},{serasa_total_debt},{scr_score},{scr_total_debt},{score}"
 
 
 
 with open("data.csv", "w") as f:
-    header = "tax_id,tax_id_type,tax_id_active,start_date,social_capital,loam_amount,serasa_score,serasa_total_debt,scr_score,scr_total_debt,score"
+    header = "tax_id,tax_id_type,tax_id_active,start_date,social_capital,loan_amount,serasa_score,serasa_total_debt,scr_score,scr_total_debt,score"
     print(header, file=f)
 
     for i in range(5000):
