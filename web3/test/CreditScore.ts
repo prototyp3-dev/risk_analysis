@@ -71,8 +71,8 @@ describe('CreditScore', () => {
     // sut = system under test
     const sut = await CreditScore.deploy(
       chainlinkDonId,
-      chainlinkRouterAddress,
       chainlinkGasLimit,
+      chainlinkRouterAddress,
       inputBoxAddress,
     );
     await sut.waitForDeployment();

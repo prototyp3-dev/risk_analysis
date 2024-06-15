@@ -22,16 +22,17 @@ contract CreditScore is ICreditScore, FunctionsClient, Ownable {
     mapping(string => CreditScoreOutput) public lastCreditScore; // taxId -> CreditScoreOutput
     mapping(string => CreditScoreOutput[]) public allCreditScores; // taxId -> CreditScoreOutput[]
     mapping(bytes32 => CreditScoreInput) public chainlinkRequests; // requestId -> CreditScoreInput
+    mapping(bytes32 => CreditScoreResponse) public chainlinkResponses; // requestId -> CreditScoreResponse
 
     constructor(
         bytes32 _chainlinkDonID,
-        address _chainlinkRouter,
         uint32 _chainlinkGasLimit,
+        address _chainlinkRouter,
         address _inputBox
     ) Ownable(msg.sender) FunctionsClient(_chainlinkRouter) {
         chainlinkDonID = _chainlinkDonID;
-        chainlinkRouter = _chainlinkRouter;
         chainlinkGasLimit = _chainlinkGasLimit;
+        chainlinkRouter = _chainlinkRouter;
         inputBox = IInputBox(_inputBox);
     }
 
@@ -69,6 +70,7 @@ contract CreditScore is ICreditScore, FunctionsClient, Ownable {
     // chainlink functions
 
     function fulfillRequest(bytes32 _requestId, bytes memory _response, bytes memory _err) internal override {
+        chainlinkResponses[_requestId] = CreditScoreResponse(_err, _response);
         CreditScoreInput memory input = chainlinkRequests[_requestId];
 
         if (_err.length > 0) {

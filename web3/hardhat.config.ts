@@ -3,6 +3,14 @@ import 'dotenv/config';
 import 'hardhat-dependency-compiler';
 import { HardhatUserConfig } from 'hardhat/config';
 
+function getAccounts() {
+  if (process.env.PRIVATE_KEY !== undefined) {
+    return [`0x${process.env.PRIVATE_KEY}`];
+  }
+
+  return [];
+}
+
 const config: HardhatUserConfig = {
   solidity: {
     version: '0.8.24',
@@ -35,6 +43,10 @@ const config: HardhatUserConfig = {
           balance: '100000000000000000000000',
         },
       ],
+    },
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: getAccounts(),
     },
   },
   etherscan: {

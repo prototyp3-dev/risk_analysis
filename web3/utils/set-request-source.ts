@@ -4,7 +4,7 @@ import path from 'node:path';
 import { JsonRpcProvider, ethers } from 'ethers';
 import { abi } from '../artifacts/contracts/CreditScore.sol/CreditScore.json';
 
-const creditScoreContract = '<CONTRACT_ADDRESS>';
+const creditScoreContract = '0x210310e40EE4F822Ff0216FCBC77CDacbCE1B4d3';
 const PRIVATE_KEY = process.env.PRIVATE_KEY || '';
 const RPC_URL = `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`;
 

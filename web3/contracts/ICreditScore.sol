@@ -16,6 +16,11 @@ interface ICreditScore {
         uint256 timestamp;
     }
 
+    struct CreditScoreResponse {
+        bytes err;
+        bytes response;
+    }
+
     error RequestSourceNotSetError();
     error CreditScoreRequestError(string taxId, uint256 loanAmount, bytes32 requestId);
     error UpdateUnauthorizedError();
