@@ -63,7 +63,7 @@ def handle_advance(rollup: Rollup, data: RollupData) -> bool:
 
         score = model.predict(model_input)[0]
         
-        rollup.notice(str2hex(str(score)))
+        rollup.notice(str2hex(json.dumps({"taxId": decoded[0], "loanAmount": decoded[1], "score": score})))
         return True
     
     except InactiveTaxId:
