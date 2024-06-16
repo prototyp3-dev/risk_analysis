@@ -10,6 +10,8 @@ from encoder import decode_payload
 class InactiveTaxId(Exception):
     pass
 
+class MissingSource(Exception):
+    pass
 
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -36,19 +38,16 @@ def build_model_input(decoded):
 
     serasa_score = None
     serasa_total_debt = None
-    scr_score = None
-    scr_total_debt = None
 
     for data_source in obj["data"]:
         if data_source["source"] == "serasa":
             serasa_score = data_source["score"]
             serasa_total_debt = data_source["total_debt"]
-        
-        elif data_source["source"] == "scr":
-            scr_score = data_source["score"]
-            scr_total_debt = data_source["total_debt"]
     
-    model_input = [social_capital, loan_amount, serasa_score, serasa_total_debt, scr_score, scr_total_debt]
+    if serasa_score is None:
+        raise MissingSource
+    
+    model_input = [social_capital, loan_amount, serasa_score, serasa_total_debt]
 
     return np.array(model_input).reshape(1, -1)
 
@@ -57,9 +56,10 @@ def build_model_input(decoded):
 def handle_advance(rollup: Rollup, data: RollupData) -> bool:
     try:
         decoded = decode_payload(data.payload)
-        LOGGER.debug(decoded)
+        LOGGER.info(decoded)
 
         model_input = build_model_input(decoded)
+        LOGGER.info(model_input)
 
         score = model.predict(model_input)[0]
         
@@ -70,6 +70,10 @@ def handle_advance(rollup: Rollup, data: RollupData) -> bool:
         rollup.report(str2hex(json.dumps({ "qualified": False, "score": 0 })))
         return False
 
+    except MissingSource:
+        rollup.report(str2hex(f"Error: Missing scores from sources\nReceived: {decoded}"))
+        return False
+
     except Exception as e:
         rollup.report(str2hex(str(e)))
         return False
@@ -78,8 +82,8 @@ def handle_advance(rollup: Rollup, data: RollupData) -> bool:
 @dapp.inspect()
 def handle_inspect(rollup: Rollup, data: RollupData) -> bool:
     try:
-        # social_capital,loan_amount,serasa_score,serasa_total_debt,scr_score,scr_total_debt
-        test_input = [77956254,364775,330,26017,942,848023]
+        # social_capital,loan_amount,serasa_score,serasa_total_debt
+        test_input = [77956254,364775,330,26017]
         test_input = np.array(test_input).reshape(1, -1)
 
         payload = str(model.predict(test_input))
