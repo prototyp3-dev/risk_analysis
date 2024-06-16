@@ -24,7 +24,7 @@ def gen_data():
         scr_score = 0
     if scr_score > 1000:
         scr_score = 1000
-    scr_total_debt = int(serasa_total_debt * (1 + scr_serasa_error_factor))
+    scr_total_debt = int(serasa_total_debt * (1 - scr_serasa_error_factor))
     avg_debt = (serasa_total_debt + scr_total_debt)/2
     loan_to_social_capital_diff = avg_debt + loan_amount - social_capital
 

@@ -29,7 +29,13 @@ pickle.dump(model, open('model.pkl', 'wb'))
 #Performing quick test on model
 
 #social_capital, loan_amount, serasa_score, serasa_total_debt, scr_score, scr_total_debt
-test_input = [77956254,364775,330,26017,942,848023]
-test_input = np.array(test_input).reshape(1, -1)
 
+column_names = ""
+for col_name in data_no_score.columns:
+    if column_names:
+        column_names += ", "
+    column_names += col_name
+test_input = [779254,364775,550,956342,600,848023]
+print(f"Test input:\n{column_names}\n{test_input}")
+test_input = np.array(test_input).reshape(1, -1)
 print("result: ", model.predict(test_input))
