@@ -7,7 +7,7 @@ RUN dpkg -i /machine-emulator-tools-v${MACHINE_EMULATOR_TOOLS_VERSION}.deb \
   && rm /machine-emulator-tools-v${MACHINE_EMULATOR_TOOLS_VERSION}.deb
 
 LABEL io.cartesi.rollups.sdk_version=0.6.0
-LABEL io.cartesi.rollups.ram_size=128Mi
+LABEL io.cartesi.rollups.ram_size=256Mi
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN <<EOF
@@ -36,4 +36,4 @@ COPY . .
 ENV ROLLUP_HTTP_SERVER_URL="http://127.0.0.1:5004"
 
 ENTRYPOINT ["rollup-init"]
-CMD ["python3", "-m", "risk-analysis.dapp"]
+CMD ["python3", "dapp.py"]
